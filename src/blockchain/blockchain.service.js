@@ -1,12 +1,17 @@
 const sha256 = require('hash.js/lib/hash/sha/256');
 const stringify = require('json-stable-stringify');
+const cuid = require('cuid');
 
 const chain = [];
 let currentTransactions = [];
+let nodeId = '';
 
 const getChain = () => chain;
 
-const init = () => newBlock(1, 100);
+const init = () => {
+    newBlock(1, 100);
+    nodeId = cuid();
+};
 
 const newBlock = (proof, previousHash) => {
     const block = {
@@ -43,6 +48,19 @@ const getLastBlock = () => chain[chain.length - 1] || {};
 
 const getNewBlockIndex = () => (getLastBlock().index || 0) + 1;
 
+const mine = () => {
+    const lastBlock = getLastBlock();
+    const lastProof = lastBlock.proof;
+    const lastHash = hash(lastBlock);
+    const proof = proofOfWork(lastProof, lastHash);
+
+    getReward();
+
+    return newBlock(proof, lastHash);
+};
+
+const getReward = () => newTransaction('0', nodeId, 1);
+
 const proofOfWork = (lastProof, lastHash) => {
     let proof = 0;
 
@@ -63,4 +81,5 @@ module.exports = {
     init,
     getChain,
     newTransaction,
+    mine,
 };

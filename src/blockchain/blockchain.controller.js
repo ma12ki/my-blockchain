@@ -7,7 +7,7 @@ const newTransaction = (req, res) => {
     res.json({ blockIndex });
 };
 
-const mine = (req, res) => service.newTransaction();
+const mine = (req, res) => res.json(service.mine());
 
 const chain = (req, res) => {
     const chain = service.getChain();
