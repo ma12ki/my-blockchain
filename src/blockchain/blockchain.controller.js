@@ -1,6 +1,11 @@
 const service = require('./blockchain.service');
 
-const newTransaction = (req, res) => service.newTransaction();
+const newTransaction = (req, res) => {
+    const { sender, recipient, amount } = req.body;
+    const blockIndex = service.newTransaction(sender, recipient, amount);
+
+    res.json({ blockIndex });
+};
 
 const mine = (req, res) => service.newTransaction();
 
