@@ -5,6 +5,7 @@ const cuid = require('cuid');
 const chain = [];
 let currentTransactions = [];
 let nodeId = '';
+const nodes = new Set();
 
 const getChain = () => chain;
 
@@ -12,6 +13,19 @@ const init = () => {
     newBlock(1, 100);
     nodeId = cuid();
 };
+
+const registerNode = (address) => nodes.add(address);
+
+const isValidChain = (chain) => chain.every((block, index) => {
+    // first block is a special case and should be empty
+    if (index === 0) {
+        return block.transactions.length === 0;
+    }
+    const previousBlock = chain[index - 1];
+
+    return block.previousHash === hash(previousBlock) &&
+        isValidProof(previousBlock.proof, block.previousHash, block.proof);
+});
 
 const newBlock = (proof, previousHash) => {
     const block = {
@@ -82,4 +96,5 @@ module.exports = {
     getChain,
     newTransaction,
     mine,
+    isValidChain,
 };

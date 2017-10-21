@@ -10,6 +10,7 @@ const router = express.Router();
 router.post('/transactions/new', controller.newTransaction);
 router.get('/mine', controller.mine);
 router.get('/chain', controller.chain);
+router.get('/chain/self-validate', controller.selfValidateChain);
 
 module.exports = {
     router,

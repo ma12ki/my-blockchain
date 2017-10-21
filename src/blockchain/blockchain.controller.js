@@ -18,8 +18,11 @@ const chain = (req, res) => {
     });
 };
 
+const selfValidateChain = (req, res) => res.json(service.isValidChain(service.getChain()));
+
 module.exports = {
     newTransaction,
     mine,
     chain,
+    selfValidateChain,
 };
