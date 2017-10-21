@@ -1,6 +1,9 @@
 const express = require('express');
 
 const controller = require('./blockchain.controller');
+const service = require('./blockchain.service');
+
+service.init();
 
 const router = express.Router();
 

@@ -6,6 +6,8 @@ let currentTransactions = [];
 
 const getChain = () => chain;
 
+const init = () => newBlock(1, 100);
+
 const newBlock = (proof, previousHash) => {
     const block = {
         index: getNewBlockIndex(),
@@ -37,9 +39,9 @@ const hash = (block) => {
     return sha256().update(stringified).digest('hex');
 };
 
-const getLastBlock = () => chain[chain.length - 1];
+const getLastBlock = () => chain[chain.length - 1] || {};
 
-const getNewBlockIndex = () => getLastBlock().index + 1;
+const getNewBlockIndex = () => (getLastBlock().index || 0) + 1;
 
 const proofOfWork = (lastProof, lastHash) => {
     let proof = 0;
@@ -58,6 +60,7 @@ const isValidProof = (lastProof, lastHash, proof) => {
 };
 
 module.exports = {
+    init,
     getChain,
     newTransaction,
 };
