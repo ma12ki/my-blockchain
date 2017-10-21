@@ -4,6 +4,8 @@ const stringify = require('json-stable-stringify');
 const chain = [];
 let currentTransactions = [];
 
+const getChain = () => chain;
+
 const newBlock = (proof, previousHash) => {
     const block = {
         index: getNewBlockIndex(),
@@ -53,4 +55,9 @@ const isValidProof = (lastProof, lastHash, proof) => {
     const guess = sha256().update(`${lastProof}${lastHash}${proof}`).digest('hex');
 
     return guess.endsWith('000');
+};
+
+module.exports = {
+    getChain,
+    newTransaction,
 };
