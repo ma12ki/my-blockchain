@@ -1,6 +1,7 @@
 const sha256 = require('hash.js/lib/hash/sha/256');
 const stringify = require('json-stable-stringify');
 const cuid = require('cuid');
+const axios = require('axios');
 
 const chain = [];
 let currentTransactions = [];
@@ -19,6 +20,25 @@ const registerNodes = (addresses) => [].concat(addresses).forEach(registerNode);
 const registerNode = (address) => nodes.add(address);
 
 const getNodes = () => [...nodes];
+
+// consensus
+const resolveConflicts = async () => {
+    const chains = await Promise.all([getChain(), ...getNodes().map(getRemoteChain)]);
+
+    return chains.reduce((longest, chain) => chain.length > longest.length && isValidChain(chain) ? chain : longest, []);
+};
+
+const getRemoteChain = async (node) => {
+    let chain = [];
+    try {
+        const res = await axios(`${node}/chain`);
+        chain = res.data;
+    } catch (e) {
+        console.log(`Something went wrong when retrieving chain from ${node}`, e);
+    }
+
+    return chain;
+};
 
 const isValidChain = (chain) => chain.every((block, index) => {
     // first block is a special case and should just be empty
@@ -103,4 +123,5 @@ module.exports = {
     isValidChain,
     registerNodes,
     getNodes,
+    resolveConflicts,
 };

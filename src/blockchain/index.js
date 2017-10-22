@@ -12,6 +12,7 @@ router.get('/mine', controller.mine);
 router.get('/chain', controller.chain);
 router.get('/chain/self-validate', controller.selfValidateChain);
 router.post('/nodes/register', controller.registerNodes);
+router.get('/nodes/resolve', controller.resolveConflicts);
 
 module.exports = {
     router,

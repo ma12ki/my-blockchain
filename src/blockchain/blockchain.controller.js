@@ -26,8 +26,10 @@ const registerNodes = (req, res) => {
     return res.json({ nodes: service.getNodes() });
 };
 
-const resolveConflicts = (req, res) => {
+const resolveConflicts = async (req, res) => {
+    const longestChain = await service.resolveConflicts();
 
+    return res.json(longestChain);
 };
 
 module.exports = {
@@ -36,4 +38,5 @@ module.exports = {
     chain,
     selfValidateChain,
     registerNodes,
+    resolveConflicts,
 };
