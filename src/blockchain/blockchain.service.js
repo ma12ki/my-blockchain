@@ -3,7 +3,7 @@ const stringify = require('json-stable-stringify');
 const cuid = require('cuid');
 const axios = require('axios');
 
-const chain = [];
+let chain = [];
 let currentTransactions = [];
 let nodeId = '';
 const nodes = new Set();
@@ -24,15 +24,16 @@ const getNodes = () => [...nodes];
 // consensus
 const resolveConflicts = async () => {
     const chains = await Promise.all([getChain(), ...getNodes().map(getRemoteChain)]);
+    chain = chains.reduce((longest, chain) => chain.length > longest.length && isValidChain(chain) ? chain : longest, []);
 
-    return chains.reduce((longest, chain) => chain.length > longest.length && isValidChain(chain) ? chain : longest, []);
+    return chain;
 };
 
 const getRemoteChain = async (node) => {
     let chain = [];
     try {
         const res = await axios(`${node}/chain`);
-        chain = res.data;
+        chain = res.data.chain;
     } catch (e) {
         console.log(`Something went wrong when retrieving chain from ${node}`, e);
     }

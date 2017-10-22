@@ -1,5 +1,10 @@
+const argv = require('yargs')
+    .alias('p', 'port')
+    .default('p', 1337)
+    .argv;
+
 const config = {
-    port: 1337,
+    port: argv.port,
 };
 
 module.exports = config;
