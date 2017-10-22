@@ -14,10 +14,14 @@ const init = () => {
     nodeId = cuid();
 };
 
+const registerNodes = (addresses) => [].concat(addresses).forEach(registerNode);
+
 const registerNode = (address) => nodes.add(address);
 
+const getNodes = () => [...nodes];
+
 const isValidChain = (chain) => chain.every((block, index) => {
-    // first block is a special case and should be empty
+    // first block is a special case and should just be empty
     if (index === 0) {
         return block.transactions.length === 0;
     }
@@ -97,4 +101,6 @@ module.exports = {
     newTransaction,
     mine,
     isValidChain,
+    registerNodes,
+    getNodes,
 };
